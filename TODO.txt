@@ -1,0 +1,7 @@
+Functional:
+ - Duplicates in glossary (currently takes the last one)
+ - Categories in tabs!
+
+
+GUI:
+ - Tab clears select-all tag

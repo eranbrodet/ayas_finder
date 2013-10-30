@@ -6,8 +6,8 @@ import ttk
 
 
 def _create_images():
-    img1 = Tkinter.PhotoImage("frameFocusBorder", file="f2.gif")
-    img2 = Tkinter.PhotoImage("frameBorder",  file="f1.gif")
+    img1 = Tkinter.PhotoImage("frameFocusBorder", file=r"images\f2.gif")
+    img2 = Tkinter.PhotoImage("frameBorder",  file=r"images\f1.gif")
     return img1, img2
 
 

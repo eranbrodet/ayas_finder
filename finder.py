@@ -1,12 +1,14 @@
 from Tkinter import Tk                                  # GUI components
-from Tkinter import Text                                # Tkinter elements
+from Tkinter import Text, Toplevel                      # Tkinter elements
+from Tkinter import StringVar, IntVar                   # Tkinter variables
 from Tkinter import BOTH, N, S                          # Directions
-from Tkinter import INSERT                              # Index positions
+from Tkinter import INSERT, END                              # Index positions
 from Tkinter import FLAT                                # Reliefs
-from ttk import Style, Frame, Button, Scrollbar, Label  # ttk elements
+from ttk import Style, Frame, Button, Scrollbar, Label, Radiobutton, Entry # ttk elements
 from PIL import Image, ImageTk
 from rounded_corners import config_round_corners
 from logic import find
+from impot_window import excel_popup
 
 
 class TextField(object):
@@ -74,7 +76,9 @@ class FinderApp(Frame):
                   self._widgets['button']:  self._widgets['results'].focus,
                   self._widgets['results'].field: self._widgets['not_found'].focus,
                   self._widgets['not_found'].field: self._widgets['to_find'].focus}
-        switch[event.widget]()
+        e = switch.get(event.widget)
+        if e:
+            e()
         return 'break'  # Won't display the character
 
     def _bindings(self):
@@ -120,7 +124,7 @@ class FinderApp(Frame):
             find(source, glossary, found, not_found)
 
         # Define button
-        dna_icon = ImageTk.PhotoImage(Image.open("dna.png"))
+        dna_icon = ImageTk.PhotoImage(Image.open("images\dna.png"))
         find_button = Button(self, image=dna_icon, text=" Find", width=10, command=_find,  compound="left")
         find_button.image = dna_icon
         #Display button
@@ -128,13 +132,27 @@ class FinderApp(Frame):
         # Keep field instances
         self._widgets['button'] = find_button
 
+        #TODO Cleanup and refactor here
+        def excel_imp_glossary():
+            excel_popup(self._widgets['glossary'].field)
+        def excel_imp_tofind():
+            excel_popup(self._widgets['to_find'].field)
+
+        xl = Button(self, text="Import Excel", command=excel_imp_tofind)
+        xl.grid(row=0, column=10)
+
+        xl2 = Button(self, text="Import Excel", command=excel_imp_glossary)
+        xl2.grid(row=3, column=10)
+
     def _init_ui(self):
         self.parent.title("Aya's Finder")
-        self.parent.wm_iconbitmap('Dna-Helix.ico')
+        self.parent.wm_iconbitmap(r'images\Dna-Helix.ico')
         # Configure style
         Style().configure("TLabel", padding=(15, 5, 0, 5), font='Times 15', background="#333", foreground="#BADA55")
+        Style().configure("TRadiobutton", padding=(15, 5, 0, 5), font='Times 15', background="#333", foreground="#BADA55")
         Style().configure("TButton", padding=(0, 0, 0, 1), font='Times 15')
         Style().configure("TFrame", padding=(0, 5, 0, 5), font='Times 15', background="#333")
+
         images = config_round_corners()     # Assigned to avoid garbage collection
         # Define widgets
         self._input_fields()
@@ -147,6 +165,7 @@ class FinderApp(Frame):
 
 def main():
     root = Tk()
+    root.wm_state(newstate="zoomed")
     FinderApp(root)     # Will enter root's event loop after initialising the UI.
 
     
